@@ -28,6 +28,6 @@ void readBytes (int address, unsigned char * arr, int size) {
 }
 
 int getFunOffset (int funcAddr) {
-  int firstFun = nothing;
+  int firstFun = (int)nothing;
   return funcAddr - firstFun;
 }

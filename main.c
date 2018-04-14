@@ -74,6 +74,7 @@ int getAllHp () {
 void killit_kouxue (int objptr) {
   __asm
   {
+    pushad
     mov ecx, objptr
     push 0
     push 0
@@ -84,6 +85,7 @@ void killit_kouxue (int objptr) {
     push 0
     mov eax, CALL_扣血
     call eax
+    popad
   }
 }
 
@@ -105,7 +107,7 @@ void cescript (char * str, int strsize) {
   int size = (int)endFunc - firstFun + 1;
   unsigned char byteArr[size];
   char hexStr[size * 3 + 1];
-  readBytes(nothing, byteArr, size);
+  readBytes(firstFun, byteArr, size);
   toHex(byteArr, hexStr, size);
 
   sprintf_s(str, strsize, "\
