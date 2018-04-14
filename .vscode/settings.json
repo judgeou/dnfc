@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "stdio.h": "c",
+    "基址.h": "c",
+    "windows.h": "c",
+    "winuser.h": "c"
+  }
+}
