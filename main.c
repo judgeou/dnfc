@@ -2,6 +2,7 @@
 #include "baseAddress.h"
 #include "useful.h"
 #include <Windows.h>
+#include <string.h>
 
 /**
  * 遍历场上的单位
@@ -73,7 +74,6 @@ int getAllHp () {
 void killit_kouxue (int objptr) {
   __asm
   {
-    pushad
     mov ecx, objptr
     push 0
     push 0
@@ -84,7 +84,6 @@ void killit_kouxue (int objptr) {
     push 0
     mov eax, CALL_扣血
     call eax
-    popad
   }
 }
 
@@ -99,16 +98,32 @@ void killthemall () {
   }
 }
 
-int main () {
-  int firstFun = nothing;
-  int size = main - firstFun + 1;
+void endFunc () {}
+
+void cescript (char * str, int strsize) {
+  int firstFun = (int)nothing;
+  int size = (int)endFunc - firstFun + 1;
   unsigned char byteArr[size];
   char hexStr[size * 3 + 1];
   readBytes(nothing, byteArr, size);
   toHex(byteArr, hexStr, size);
-  printf("allbytes: %s \n", hexStr);
-  printf("getAllHp: %x \n", getFunOffset(getAllHp));
-  printf("killthemall: %x \n", getFunOffset(killthemall));
+
+  sprintf_s(str, strsize, "\
+alloc(code, 4096)\n\
+registerSymbol(code)\n\
+code:\n\
+db %s\n\
+define(getAllHp, code+%x)\n\
+registerSymbol(getAllHp)\n\
+define(killthemall, code+%x)\n\
+registerSymbol(killthemall)\n\
+", hexStr, getAllHp - firstFun, killthemall - firstFun);
+}
+
+int main () {
+  char str[2000];
+  cescript(str, 2000);
+  printf("%s", str);
   getchar();
   return 0;
 }
