@@ -29,5 +29,5 @@ void readBytes (int address, unsigned char * arr, int size) {
 
 int getFunOffset (int funcAddr) {
   int firstFun = nothing;
-  return funcAddr - firstFun + 2;
+  return funcAddr - firstFun;
 }

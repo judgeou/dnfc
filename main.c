@@ -18,7 +18,7 @@ int allobj (int zhenying, int typemask, int * arr) {
       int start = getValue(bc + 0xC0);
       int end = getValue(bc + 0xC4);
       int index = start;
-      for (int index = start; index <= end; index += 4) {
+      for (int index = start; index < end; index += 4) {
         int obj = getValue(index);
         int zy = getValue(obj + 阵营偏移);
         int type = getValue(obj + 类型偏移);
@@ -41,12 +41,17 @@ int allobj (int zhenying, int typemask, int * arr) {
  * @param ptr
  */
 int getHp (int ptr) {
+  int hpValue;
   __asm
   {
-   mov ecx, ptr
-   mov eax, [ecx]
-   call [eax + 0x40C]
+    pushad
+    mov ecx, ptr
+    mov eax, [ecx]
+    call [eax + 0x40C]
+    mov hpValue, eax
+    popad
   }
+  return hpValue;
 }
 
 /**
@@ -62,6 +67,38 @@ int getAllHp () {
   return sumHp;
 }
 
+/**
+ * 扣血秒杀
+ */
+void killit_kouxue (int objptr) {
+  __asm
+  {
+    pushad
+    mov ecx, objptr
+    push 0
+    push 0
+    push 0
+    push ecx
+    push 1
+    push 0
+    push 0
+    mov eax, CALL_扣血
+    call eax
+    popad
+  }
+}
+
+/**
+ * 扣血秒杀全场
+ */
+void killthemall () {
+  int objArr[50];
+  int count = allobj(100, 0x11, objArr);
+  for (int i = 0; i < count; i++) {
+    killit_kouxue(objArr[i]);
+  }
+}
+
 int main () {
   int firstFun = nothing;
   int size = main - firstFun + 1;
@@ -71,6 +108,7 @@ int main () {
   toHex(byteArr, hexStr, size);
   printf("allbytes: %s \n", hexStr);
   printf("getAllHp: %x \n", getFunOffset(getAllHp));
-  printf("getHp: %x \n", getFunOffset(getHp));
+  printf("killthemall: %x \n", getFunOffset(killthemall));
   getchar();
+  return 0;
 }
