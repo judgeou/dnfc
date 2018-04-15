@@ -1,9 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void nothing () {
-}
-
 int getValue (int address) {
   return *(int*)address;
 }
@@ -27,7 +24,10 @@ void readBytes (int address, unsigned char * arr, int size) {
   }
 }
 
-int getFunOffset (int funcAddr) {
-  int firstFun = (int)nothing;
-  return funcAddr - firstFun;
+int readBytesBetweenTwoFunc (void (*beginFunc)(), void (*endFunc)(), unsigned char * byteArr) {
+  int begin = (int)beginFunc;
+  int end = (int)endFunc;
+  int size = end - begin + 1;
+  readBytes(begin, byteArr, size);
+  return size;
 }
