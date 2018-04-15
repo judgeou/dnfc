@@ -6,7 +6,7 @@
 
 /**
  * 遍历场上的单位
- * @param zhenying 阵营
+ * @param zhenying 要排除的阵营
  * @param typemask 类别掩码
  * @param cb 对每个单位调用的call
  */
@@ -23,7 +23,7 @@ int allobj (int zhenying, int typemask, int * arr) {
         int obj = getValue(index);
         int zy = getValue(obj + 阵营偏移);
         int type = getValue(obj + 类型偏移);
-        if (zy == zhenying && ((type & typemask) == typemask)) {
+        if (zy != zhenying && ((type & typemask) == typemask)) {
           arr[count] = obj;
           count++;
         }
@@ -60,7 +60,7 @@ int getHp (int ptr) {
  */
 int getAllHp () {
   int objArr[50];
-  int count = allobj(100, 0x11, objArr);
+  int count = allobj(0, 0x11, objArr);
   int sumHp = 0;
   for (int i = 0; i < count; i++) {
     sumHp += getHp(objArr[i]);
@@ -94,7 +94,7 @@ void killit_kouxue (int objptr) {
  */
 void killthemall () {
   int objArr[50];
-  int count = allobj(100, 0x11, objArr);
+  int count = allobj(0, 0x11, objArr);
   for (int i = 0; i < count; i++) {
     killit_kouxue(objArr[i]);
   }
