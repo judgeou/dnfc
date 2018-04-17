@@ -108,9 +108,9 @@ void killthemall () {
 void endFunc () {}
 
 void cescript (char * str, int strsize) {
-  unsigned char * byteArr = malloc(1024);
+  unsigned char * byteArr = (unsigned char *)malloc(1024);
   int byteSize = readBytesBetweenTwoFunc(beginFunc, endFunc, byteArr);
-  char * hexStr = malloc(byteSize * 3 + 1);
+  char * hexStr = (char *)malloc(byteSize * 3 + 1);
   toHex(byteArr, hexStr, byteSize);
 
   sprintf_s(str, strsize, "\
@@ -122,7 +122,7 @@ define(getAllHp, code+%x)\n\
 registerSymbol(getAllHp)\n\
 define(killthemall, code+%x)\n\
 registerSymbol(killthemall)\n\
-", hexStr, getAllHp - (int)beginFunc, killthemall - (int)beginFunc);
+", hexStr, (int)getAllHp - (int)beginFunc, (int)killthemall - (int)beginFunc);
 }
 
 int main () {
