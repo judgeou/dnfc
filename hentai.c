@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "baseAddress.h"
 
 void beginFunc () {}
@@ -64,7 +65,10 @@ int getAllHp () {
   int count = allobj(0, 0x11, objArr);
   int sumHp = 0;
   for (int i = 0; i < count; i++) {
-    sumHp += getHp(objArr[i]);
+    int hp = getHp(objArr[i]);
+    if (hp <= 99099999) {
+      sumHp += hp;
+  }
   }
   return sumHp;
 }
