@@ -126,6 +126,7 @@ BOOL hookRecovery (HANDLE pHandle, struct HookPoint hookpoint, ADDRESS jmpAddr) 
     NULL
   )) {
     if (jmpAddr) {
+      Sleep(200);
       return VirtualFreeEx(pHandle, (LPVOID)jmpAddr, 0, MEM_RELEASE);
     } else {
       return TRUE;

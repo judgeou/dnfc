@@ -31,7 +31,7 @@ int main () {
     if (s) {
       ADDRESS codeAddr = hook(info.pHandle, loopPoint, code, sizeof(code));
       printf("kill %x\n", codeAddr);
-      Sleep(100);
+      Sleep(50);
       hookRecovery(info.pHandle, loopPoint, codeAddr);
     }
 

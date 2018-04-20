@@ -5,6 +5,7 @@
     "windows.h": "c",
     "winuser.h": "c",
     "baseaddress.h": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "*.rh": "c"
   }
 }
