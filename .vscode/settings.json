@@ -4,6 +4,7 @@
     "基址.h": "c",
     "windows.h": "c",
     "winuser.h": "c",
-    "baseaddress.h": "c"
+    "baseaddress.h": "c",
+    "string.h": "c"
   }
 }

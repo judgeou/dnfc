@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "baseAddress.h"
+#include "useful.c"
 
 void beginFunc () {}
 
-#include "useful.c"
+#include "pureuse.c"
 
 /**
  * 遍历场上的单位
@@ -25,7 +26,7 @@ int allobj (int zhenying, int typemask, int * arr) {
         int obj = getValue(index);
         int zy = getValue(obj + 阵营偏移);
         int type = getValue(obj + 类型偏移);
-        if (zy != zhenying && ((type & typemask) == typemask)) {
+        if (zy == zhenying && ((type & typemask) == typemask)) {
           arr[count] = obj;
           count++;
         }
@@ -62,13 +63,11 @@ int getHp (int ptr) {
  */
 int getAllHp () {
   int objArr[50];
-  int count = allobj(0, 0x11, objArr);
+  int count = allobj(100, 0x11, objArr);
   int sumHp = 0;
   for (int i = 0; i < count; i++) {
     int hp = getHp(objArr[i]);
-    if (hp <= 99099999) {
-      sumHp += hp;
-  }
+    sumHp += hp;
   }
   return sumHp;
 }
@@ -99,7 +98,7 @@ void killit_kouxue (int objptr) {
  */
 void killthemall () {
   int objArr[50];
-  int count = allobj(0, 0x11, objArr);
+  int count = allobj(100, 0x11, objArr);
   for (int i = 0; i < count; i++) {
     killit_kouxue(objArr[i]);
   }
