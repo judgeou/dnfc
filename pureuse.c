@@ -119,4 +119,6 @@ void killthemall () {
   }
 }
 
+void killthemall_end () {}
+
 void endFunc () {}
