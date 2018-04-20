@@ -14,6 +14,18 @@ struct ProcessInfo {
   DWORD pId;
 };
 
+struct HookPoint {
+  ADDRESS address;
+  unsigned char * originalBytes;
+  int originalBytesSize;
+};
+
+void copyArray (char * target, char * source, int length) {
+  for (int i = 0; i < length; i++) {
+    target[i] = source[i];
+  }
+}
+
 BOOL readPointerBuffer (
   ADDRESS address,
   int * offsets,
@@ -77,6 +89,40 @@ BOOL writePointerBuffer (
     }
     return TRUE;
   }
+}
+
+BOOL hook (HANDLE pHandle, struct HookPoint hookpoint, char * code, int codeSize) {
+  // 加上覆盖代码的字节和跳转字节
+  int rCodeSize = codeSize + hookpoint.originalBytesSize + 5;
+  unsigned char * rCode = malloc(rCodeSize);
+  memcpy(rCode, code, codeSize);
+  ADDRESS jmpAddr = (ADDRESS)VirtualAllocEx(pHandle, NULL, rCodeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+
+  // 插入原代码
+  memcpy(&rCode[codeSize], hookpoint.originalBytes, hookpoint.originalBytesSize);
+
+  // 插入跳回代码
+  rCode[codeSize + hookpoint.originalBytesSize] = 0xE9;
+  *(int*)&rCode[codeSize + hookpoint.originalBytesSize + 1] = (hookpoint.address + hookpoint.originalBytesSize) - (jmpAddr + rCodeSize);
+
+  if (WriteProcessMemory(pHandle, jmpAddr, rCode, rCodeSize, NULL)) {
+    unsigned char jmpBytes[5];
+    jmpBytes[0] = 0xE9;
+    *(int*)&jmpBytes[1] = jmpAddr - hookpoint.address - 5;
+    return WriteProcessMemoryForce(pHandle, hookpoint.address, jmpBytes, 5, NULL);
+  } else {
+    return FALSE;
+  }
+}
+
+BOOL hookRecovery (HANDLE pHandle, struct HookPoint hookpoint) {
+  return WriteProcessMemoryForce(
+    pHandle,
+    hookpoint.address,
+    hookpoint.originalBytes,
+    hookpoint.originalBytesSize,
+    NULL
+  );
 }
 
 /**
