@@ -9,8 +9,9 @@ int main () {
   int byteSize = readBytesBetweenTwoFunc(beginFunc, endFunc, byteArr);
   struct ProcessInfo info = getProcessByName("DNF.exe");
 
-  ADDRESS mycode = (ADDRESS)VirtualAllocEx(info.pHandle, NULL, byteSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+  ADDRESS mycode = (ADDRESS)VirtualAllocEx(info.pHandle, NULL, byteSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE);
   BOOL r1 = WriteProcessMemoryForce(info.pHandle, (LPVOID)mycode, byteArr, byteSize, NULL);
+
   int killthemallAddr = mycode + ((int)killthemall - (int)beginFunc);
 
   if (mycode && r1) {
