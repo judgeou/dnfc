@@ -96,7 +96,7 @@ ADDRESS hook (HANDLE pHandle, struct HookPoint hookpoint, unsigned char * code, 
   int rCodeSize = codeSize + hookpoint.originalBytesSize + 5;
   unsigned char * rCode = malloc(rCodeSize);
   memcpy(rCode, code, codeSize);
-  ADDRESS jmpAddr = (ADDRESS)VirtualAllocEx(pHandle, NULL, rCodeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+  ADDRESS jmpAddr = (ADDRESS)VirtualAllocEx(pHandle, NULL, rCodeSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
 
   // 插入被覆盖的原代码
   memcpy(&rCode[codeSize], hookpoint.originalBytes, hookpoint.originalBytesSize);
