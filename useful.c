@@ -91,14 +91,14 @@ BOOL writePointerBuffer (
   }
 }
 
-BOOL hook (HANDLE pHandle, struct HookPoint hookpoint, char * code, int codeSize) {
+ADDRESS hook (HANDLE pHandle, struct HookPoint hookpoint, char * code, int codeSize) {
   // 加上覆盖代码的字节和跳转字节
   int rCodeSize = codeSize + hookpoint.originalBytesSize + 5;
   unsigned char * rCode = malloc(rCodeSize);
   memcpy(rCode, code, codeSize);
   ADDRESS jmpAddr = (ADDRESS)VirtualAllocEx(pHandle, NULL, rCodeSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 
-  // 插入原代码
+  // 插入被覆盖的原代码
   memcpy(&rCode[codeSize], hookpoint.originalBytes, hookpoint.originalBytesSize);
 
   // 插入跳回代码
@@ -106,23 +106,33 @@ BOOL hook (HANDLE pHandle, struct HookPoint hookpoint, char * code, int codeSize
   *(int*)&rCode[codeSize + hookpoint.originalBytesSize + 1] = (hookpoint.address + hookpoint.originalBytesSize) - (jmpAddr + rCodeSize);
 
   if (WriteProcessMemory(pHandle, jmpAddr, rCode, rCodeSize, NULL)) {
+    // 写入跳转
     unsigned char jmpBytes[5];
     jmpBytes[0] = 0xE9;
     *(int*)&jmpBytes[1] = jmpAddr - hookpoint.address - 5;
-    return WriteProcessMemoryForce(pHandle, hookpoint.address, jmpBytes, 5, NULL);
+    BOOL r = WriteProcessMemoryForce(pHandle, hookpoint.address, jmpBytes, 5, NULL);
+    return r? jmpAddr: 0;
   } else {
     return FALSE;
   }
 }
 
-BOOL hookRecovery (HANDLE pHandle, struct HookPoint hookpoint) {
-  return WriteProcessMemoryForce(
+BOOL hookRecovery (HANDLE pHandle, struct HookPoint hookpoint, ADDRESS jmpAddr) {
+  if (WriteProcessMemoryForce(
     pHandle,
     hookpoint.address,
     hookpoint.originalBytes,
     hookpoint.originalBytesSize,
     NULL
-  );
+  )) {
+    if (jmpAddr) {
+      return VirtualFreeEx(pHandle, jmpAddr, 0, MEM_RELEASE);
+    } else {
+      return TRUE;
+    }
+  } else {
+    return FALSE;
+  }
 }
 
 /**

@@ -10,10 +10,10 @@ int main () {
   hp1.originalBytes = originalBytes;
   hp1.originalBytesSize = sizeof(originalBytes);
   unsigned char hookcode[] = { 0x60, 0xB8, 0x01, 00, 00, 00, 0xFF, 0xD0, 0x61 };
-  BOOL r = hook(info.pHandle, hp1, hookcode, sizeof(hookcode));
-  printf("%d", r);
+  ADDRESS jmpAddr = hook(info.pHandle, hp1, hookcode, sizeof(hookcode));
+  printf("%x", jmpAddr);
   getchar();
 
-  r = hookRecovery(info.pHandle, hp1);
+  BOOL r = hookRecovery(info.pHandle, hp1, jmpAddr);
   printf("%d", r);
 }
