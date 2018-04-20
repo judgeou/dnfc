@@ -41,7 +41,7 @@ int allobj (int zhenying, int typemask, int * arr) {
         int obj = getValue(index);
         int zy = getValue(obj + 阵营偏移);
         int type = getValue(obj + 类型偏移);
-        if (zy == zhenying && ((type & typemask) == typemask)) {
+        if ((zy == zhenying || zy == 101) && ((type & typemask) == typemask)) {
           arr[count] = obj;
           count++;
         }
