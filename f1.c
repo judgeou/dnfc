@@ -4,25 +4,25 @@
 #include "useful.c"
 #include "pureuse.c"
 
-int main () {
+BOOL readyCodeToTarget (HANDLE pHandle) {
   unsigned char * byteArr = (unsigned char *)malloc(1024);
   int byteSize = readBytesBetweenTwoFunc(beginFunc, endFunc, byteArr);
-  struct ProcessInfo info = getProcessByName("DNF.exe");
-
-  ADDRESS mycode = (ADDRESS)VirtualAllocEx(info.pHandle, NULL, byteSize, MEM_COMMIT, PAGE_EXECUTE);
-  if (!mycode) {
-    printErrCode();
+  ADDRESS mycode = (ADDRESS)VirtualAllocEx(pHandle, NULL, byteSize, MEM_COMMIT, PAGE_EXECUTE);
+  if (mycode) {
+    BOOL r = WriteProcessMemoryForce(pHandle, (LPVOID)mycode, byteArr, byteSize, NULL);
+    printf("write %d bytes %x\n", byteSize, mycode);
+    free(byteArr);
+    return r? mycode: FALSE;
+  } else {
+    return FALSE;
   }
-  BOOL r1 = WriteProcessMemoryForce(info.pHandle, (LPVOID)mycode, byteArr, byteSize, NULL);
+}
+
+int main () {
+  struct ProcessInfo info = getProcessByName("DNF.exe");
+  ADDRESS mycode = readyCodeToTarget(info.pHandle);
 
   int killthemallAddr = mycode + ((int)killthemall - (int)beginFunc);
-
-  if (mycode && r1) {
-    printf("write %d bytes %x\n", byteSize, mycode);
-  } else {
-    printErrCode();
-    return 0;
-  }
 
   unsigned char originalBytes[] = { 0x8B, 0x90, 0x14, 0x06, 00, 00 };
   struct HookPoint loopPoint = { 
@@ -55,14 +55,14 @@ int main () {
     SHORT f3 = GetAsyncKeyState(VK_F3);
     if (f3) {
       unsigned char b1[] = { 0x78 };
-      WriteProcessMemoryForce(info.pHandle, (LPVOID)0x23159f7, b1, sizeof(b1), NULL);
+      WriteProcessMemoryForce(info.pHandle, (LPVOID)ADDR_PICKUP1, b1, sizeof(b1), NULL);
       unsigned char b2[] = { 0x88 };
-      WriteProcessMemoryForce(info.pHandle, (LPVOID)0x23159c6, b2, sizeof(b2), NULL);
+      WriteProcessMemoryForce(info.pHandle, (LPVOID)ADDR_PICKUP2, b2, sizeof(b2), NULL);
       Sleep(100);
       unsigned char b3[] = { 0x74 };
-      WriteProcessMemoryForce(info.pHandle, (LPVOID)0x23159f7, b3, sizeof(b3), NULL);
+      WriteProcessMemoryForce(info.pHandle, (LPVOID)ADDR_PICKUP1, b3, sizeof(b3), NULL);
       unsigned char b4[] = { 0x84 };
-      WriteProcessMemoryForce(info.pHandle, (LPVOID)0x23159c6, b4, sizeof(b4), NULL);
+      WriteProcessMemoryForce(info.pHandle, (LPVOID)ADDR_PICKUP2, b4, sizeof(b4), NULL);
     }
     Sleep(100);
   }
