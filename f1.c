@@ -9,7 +9,10 @@ int main () {
   int byteSize = readBytesBetweenTwoFunc(beginFunc, endFunc, byteArr);
   struct ProcessInfo info = getProcessByName("DNF.exe");
 
-  ADDRESS mycode = (ADDRESS)VirtualAllocEx(info.pHandle, NULL, byteSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE);
+  ADDRESS mycode = (ADDRESS)VirtualAllocEx(info.pHandle, NULL, byteSize, MEM_COMMIT, PAGE_EXECUTE);
+  if (!mycode) {
+    printErrCode();
+  }
   BOOL r1 = WriteProcessMemoryForce(info.pHandle, (LPVOID)mycode, byteArr, byteSize, NULL);
 
   int killthemallAddr = mycode + ((int)killthemall - (int)beginFunc);
@@ -21,11 +24,14 @@ int main () {
     return 0;
   }
 
-  struct HookPoint loopPoint;
-  loopPoint.address = HOOK_LOOP;
   unsigned char originalBytes[] = { 0x8B, 0x90, 0x14, 0x06, 00, 00 };
-  loopPoint.originalBytes = originalBytes;
-  loopPoint.originalBytesSize = 6;
+  struct HookPoint loopPoint = { 
+    .address = HOOK_LOOP,
+    .originalBytes = originalBytes,
+    .originalBytesSize = 6,
+    .allocAddr = 0,
+    .allocSize = 0
+  };
 
   unsigned char code[] = { 0x60, 0xB8, 0x00, 00, 00, 00, 0xFF, 0xD0, 0x61 };
   *(int*)&code[2] = killthemallAddr;
@@ -33,10 +39,10 @@ int main () {
   while (info.pHandle) {
     SHORT s = GetAsyncKeyState(VK_F1);
     if (s) {
-      ADDRESS codeAddr = hook(info.pHandle, loopPoint, code, sizeof(code));
+      ADDRESS codeAddr = hook(info.pHandle, &loopPoint, code, sizeof(code));
       printf("kill %x\n", codeAddr);
       Sleep(50);
-      hookRecovery(info.pHandle, loopPoint, codeAddr);
+      hookRecovery(info.pHandle, &loopPoint);
     }
 
     SHORT f2 = GetAsyncKeyState(VK_F2);
