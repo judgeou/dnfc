@@ -37,7 +37,7 @@ int main () {
   *(int*)&code[2] = killthemallAddr;
 
   while (info.pHandle) {
-    SHORT s = GetAsyncKeyState(VK_F1);
+    SHORT s = GetAsyncKeyState(VK_F12);
     if (s) {
       ADDRESS codeAddr = hook(info.pHandle, &loopPoint, code, sizeof(code));
       printf("kill %x\n", codeAddr);
@@ -45,14 +45,14 @@ int main () {
       hookRecovery(info.pHandle, &loopPoint);
     }
 
-    SHORT f2 = GetAsyncKeyState(VK_F2);
+    SHORT f2 = GetAsyncKeyState(VK_F11);
     if (f2) {
       int offsets[] = { 0xc0c };
       int value = 741741;
       writePointerBuffer(SSS_ADDR, offsets, LENGTH(offsets), 4, (char*)&value, info.pHandle);
     }
 
-    SHORT f3 = GetAsyncKeyState(VK_F3);
+    SHORT f3 = GetAsyncKeyState(VK_F10);
     if (f3) {
       unsigned char b1[] = { 0x78 };
       WriteProcessMemoryForce(info.pHandle, (LPVOID)ADDR_PICKUP1, b1, sizeof(b1), NULL);
