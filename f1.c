@@ -66,5 +66,8 @@ int main () {
     }
     Sleep(100);
   }
+
+  // 退出清理内存
+  VirtualFreeEx(info.pHandle, (LPVOID)mycode, 0, MEM_RELEASE);
   CloseHandle(info.pHandle);
 }
