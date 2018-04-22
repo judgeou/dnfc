@@ -140,7 +140,6 @@ BOOL hookRecovery (HANDLE pHandle, struct HookPoint *hookpoint) {
     NULL
   )) {
     DWORD old;
-    Sleep(100);
     BOOL r = VirtualProtectEx(pHandle, (LPVOID)hookpoint->allocAddr, hookpoint->allocSize, PAGE_NOACCESS, &old);
     if (!r) {
       printErrCode();
