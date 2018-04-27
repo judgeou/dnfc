@@ -6,3 +6,5 @@
 
 void featureInit ();
 void killAll ();
+void miaosha ();
+void miaoshaRe ();

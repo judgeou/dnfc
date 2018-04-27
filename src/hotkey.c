@@ -34,8 +34,7 @@ void startSyncListenKey () {
     struct keyNode * node = beginKeyNode;
     while (node) {
       SHORT kcode = GetAsyncKeyState(node->vKey);
-      if (kcode & 0x0001) {
-        printf("%x\n", kcode);
+      if (kcode) {
         if (node->pressCount % 2 == 0) {
           node->func();
         } else {
@@ -51,6 +50,6 @@ void startSyncListenKey () {
       node = node->next;
     }
 
-    Sleep(50);
+    Sleep(200);
   }
 }
