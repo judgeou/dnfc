@@ -6,6 +6,15 @@
     "winuser.h": "c",
     "baseaddress.h": "c",
     "string.h": "c",
-    "*.rh": "c"
+    "*.rh": "c",
+    "psapi.h": "c",
+    "tlhelp32.h": "c",
+    "useful.h": "c",
+    "hook.h": "c",
+    "basetype.h": "c",
+    "std.h": "c",
+    "winapifamily.h": "c",
+    "feature.h": "c",
+    "hotkey.h": "c"
   }
 }

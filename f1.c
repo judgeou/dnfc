@@ -22,17 +22,9 @@ int main () {
   struct ProcessInfo info = getProcessByName("DNF.exe");
   ADDRESS mycode = readyCodeToTarget(info.pHandle);
 
+  /* 秒杀hook */
   int killthemallAddr = mycode + ((int)killthemall - (int)beginFunc);
-
-  unsigned char originalBytes[] = { 0x8B, 0x90, 0x14, 0x06, 00, 00 };
-  struct HookPoint loopPoint = { 
-    .address = HOOK_LOOP,
-    .originalBytes = originalBytes,
-    .originalBytesSize = 6,
-    .allocAddr = 0,
-    .allocSize = 0
-  };
-
+  struct HookPoint loopPoint = getLoopPoint();
   unsigned char code[] = { 0x60, 0xB8, 0x00, 00, 00, 00, 0xFF, 0xD0, 0x61 };
   *(int*)&code[2] = killthemallAddr;
 

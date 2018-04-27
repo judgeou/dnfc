@@ -1,0 +1,18 @@
+#define 阵营偏移 0x82C
+#define 类型偏移 0x98
+#define CALL_SETHP 0x01F16180
+
+// 8B 06 8b 90  14 060000 + 2bytes
+#define HOOK_LOOP 0x022AFACE
+
+// 8B 01 8B 90 100C0000 - 4bytes
+#define ADDR_PLAYER 0x04E004D8
+
+// 83 C4 04 8B F8 57 6A 06 - 4bytes
+#define ADDR_SSS 0x04D07C84
+
+// #define ADDR_PICKUP1 0x23159f7
+// #define ADDR_PICKUP2 0x23159c6
+
+// 0F 5B C0 F3 0F 59 45 08 F3 0F 59 45 F4 F3 0F 11 + 13bytes
+#define ADDR_DMGCALC 0x02D209DE

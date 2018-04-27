@@ -1,3 +1,2 @@
-*.exe
+asm
 *.s
-*.pdb
