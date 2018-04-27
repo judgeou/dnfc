@@ -54,6 +54,14 @@ void miaoshaRe () {
   printf("one hit kill OFF\n");
 }
 
+void miaosha999 () {
+  HANDLE pHandle = feature.process.pHandle;
+  struct HookPoint * dmgPoint = getAllHpDmgPoint();
+  PUCHAR code = hookjmpBytes(hookcode_999dmg);
+  ADDRESS r = hook(pHandle, dmgPoint, code, sizeof(hookwapper));
+  printf("99999999 ON %x\n", r);
+}
+
 void featureInit () {
   struct ProcessInfo info = getProcessByName("DNF.exe");
   feature.process = info;

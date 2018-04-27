@@ -8,3 +8,4 @@ void featureInit ();
 void killAll ();
 void miaosha ();
 void miaoshaRe ();
+void miaosha999 ();

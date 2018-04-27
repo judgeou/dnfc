@@ -96,8 +96,9 @@ void killit_kouxue (int objptr) {
  * 扣血秒杀全场
  */
 void killthemall () {
-  int objArr[50];
+  int objArr[100];
   int count = allobj(100, 0x11, objArr);
+  printf("kill %d\n", count);
   for (int i = 0; i < count; i++) {
     killit_kouxue(objArr[i]);
   }
@@ -128,5 +129,27 @@ void hookcode_allhpdmg () {
 }
 
 void hookcode_allhpdmg_end () {}
+
+void hookcode_999dmg () {
+  int obj;
+  __asm
+  {
+    mov eax, [ebp + 0xc]
+    mov obj, eax
+  }
+  int zy = getValue(obj + 阵营偏移);
+  int type = getValue(obj + 类型偏移);
+  if ((type & 0x11) == 0x11) {
+    int dmg;
+    if (zy == 0) {
+      dmg = 1;
+    } else {
+      dmg = 100000000;
+    }
+    __asm {
+      cvtsi2ss xmm0, dmg
+    }
+  }
+}
 
 void endFunc () {}

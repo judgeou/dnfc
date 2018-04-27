@@ -1,6 +1,6 @@
 #define 阵营偏移 0x82C
 #define 类型偏移 0x98
-#define CALL_SETHP 0x01F13760
+#define CALL_SETHP 0x01F16180
 
 // 8B 06 8b 90  14 060000 + 2bytes
 #define HOOK_LOOP 0x022AFACE

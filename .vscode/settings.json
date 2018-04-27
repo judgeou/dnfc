@@ -14,6 +14,7 @@
     "basetype.h": "c",
     "std.h": "c",
     "winapifamily.h": "c",
-    "feature.h": "c"
+    "feature.h": "c",
+    "hotkey.h": "c"
   }
 }
