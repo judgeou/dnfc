@@ -6,7 +6,7 @@
     {
       "label": "asm",
       "type": "shell",
-      "command": "clang -m32 -Oz -S -P -masm=intel main.c",
+      "command": "clang -m32 -Oz -S -masm=intel src/main.c src/hotkey.c src/feature.c src/useful.c src/hook.c",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -23,7 +23,14 @@
     {
       "label": "exe",
       "type": "shell",
-      "command": "clang -m32 -Oz main.c",
+      "command": "clang -m32 -Oz -o build/csrss.exe src/main.c src/hotkey.c src/feature.c src/useful.c src/hook.c",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "exe debug",
+      "type": "shell",
+      "command": "clang -m32 -Oz -g src/main.c src/hotkey.c src/feature.c src/useful.c src/hook.c",
       "group": "build",
       "problemMatcher": []
     }
