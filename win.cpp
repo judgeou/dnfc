@@ -120,7 +120,7 @@ DWORD WINAPI showMsg (const wchar_t * msg) {
   HWND hwnd = CreateWindow(
     L"static",
     msg,
-    WS_VISIBLE,
+    WS_DISABLED,
     10,
     10,
     300,
@@ -131,7 +131,7 @@ DWORD WINAPI showMsg (const wchar_t * msg) {
     NULL
   );
   SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 300, 1,
-    SWP_NOMOVE | SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOOWNERZORDER);
+    SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
   Sleep(1500);
   DestroyWindow(hwnd);
   return 0;
