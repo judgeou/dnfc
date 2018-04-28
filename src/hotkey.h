@@ -1,5 +1,3 @@
-#pragma comment(lib, "user32")
-
 /**
  * 添加按键监听
  */

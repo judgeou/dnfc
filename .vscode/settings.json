@@ -15,6 +15,9 @@
     "std.h": "c",
     "winapifamily.h": "c",
     "feature.h": "c",
-    "hotkey.h": "c"
+    "hotkey.h": "c",
+    "vector": "cpp",
+    "xstring": "cpp",
+    "xutility": "cpp"
   }
 }

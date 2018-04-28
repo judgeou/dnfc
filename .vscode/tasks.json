@@ -28,6 +28,13 @@
       "problemMatcher": []
     },
     {
+      "label": "winexe",
+      "type": "shell",
+      "command": "clang -m32 -Oz -o build/csrss.exe win.cpp src/hotkey.c src/feature.c src/useful.c src/hook.c",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
       "label": "exe debug",
       "type": "shell",
       "command": "clang -m32 -Oz -g src/main.c src/hotkey.c src/feature.c src/useful.c src/hook.c",

@@ -72,9 +72,17 @@ void comeon () {
   hookRecovery(pHandle, loopPoint);
 }
 
-void featureInit () {
+void SSS () {
+  HANDLE pHandle = feature.process.pHandle;
+  int offsets[] = { 0xC0C };
+  int value = 741741;
+  writePointerBuffer(ADDR_SSS, offsets, 1, 4, (char*)&value, pHandle);
+}
+
+ADDRESS featureInit () {
   struct ProcessInfo info = getProcessByName("DNF.exe");
   feature.process = info;
   ADDRESS mycode = readyCodeToTarget(info.pHandle);
   feature.mycode = mycode;
+  return mycode;
 }
