@@ -62,6 +62,16 @@ void miaosha999 () {
   printf("99999999 ON %x\n", r);
 }
 
+void comeon () {
+  HANDLE pHandle = feature.process.pHandle;
+  struct HookPoint * loopPoint = getLoopPoint();
+  PUCHAR code = hookjmpBytes(hookcode_comeon);
+  ADDRESS r = hook(pHandle, loopPoint, code, sizeof(hookwapper));
+  printf("come on baby! %x\n", r);
+  Sleep(50);
+  hookRecovery(pHandle, loopPoint);
+}
+
 void featureInit () {
   struct ProcessInfo info = getProcessByName("DNF.exe");
   feature.process = info;

@@ -9,3 +9,4 @@ void killAll ();
 void miaosha ();
 void miaoshaRe ();
 void miaosha999 ();
+void comeon ();

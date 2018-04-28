@@ -6,6 +6,56 @@ int getValue (int address) {
   return *(int*)address;
 }
 
+void setValue (int address, int value) {
+  *(int*)address = value;
+}
+
+int getPointerValue (int base, int * offsets, int offsetsLen) {
+  int start = getValue(base);
+  if (offsetsLen == 0) {
+    return start;
+  } else {
+    for (int i = 0; i < offsetsLen; i++) {
+      int ptrAddr = start + offsets[i];
+      if (i == offsetsLen - 1) {
+        return getValue(ptrAddr);
+      } else {
+        start = getValue(ptrAddr);
+      }
+    }
+    return 0;
+  }
+}
+
+char setPointerValue (int base, int * offsets, int offsetsLen, int value) {
+  int start = getValue(base);
+  if (offsetsLen == 0) {
+    setValue(base, value);
+    return 0;
+  } else {
+    for (int i = 0; i < offsetsLen; i++) {
+      int ptrAddr = start + offsets[i];
+      if (i == offsetsLen - 1) {
+        setValue(ptrAddr, value);
+        return 0;
+      } else {
+        start = getValue(ptrAddr);
+      }
+    }
+    return 1;
+  }
+}
+
+float getPointerValueF (int base, int * offsets, int offsetsLen) {
+  int r = getPointerValue(base, offsets, offsetsLen);
+  return *(float*)&r;
+}
+
+char setPointerValueF (int base, int * offsets, int offsetsLen, float value) {
+  int intValue = *(int*)&value;
+  return setPointerValue(base, offsets, offsetsLen, intValue);
+}
+
 /**
  * 遍历场上的单位
  * @param zhenying 要排除的阵营
@@ -25,7 +75,7 @@ int allobj (int zhenying, int typemask, int * arr) {
         int obj = getValue(index);
         int zy = getValue(obj + 阵营偏移);
         int type = getValue(obj + 类型偏移);
-        if ((zy == zhenying || zy > 100) && ((type & typemask) == typemask)) {
+        if ((zy != 0) && ((type & typemask) == typemask)) {
           arr[count] = obj;
           count++;
         }
@@ -106,6 +156,53 @@ void killthemall () {
 
 void killthemall_end () {}
 
+void hookcode_comeon () {
+  int distance;
+  int r;
+  __asm {
+    mov distance, 100
+    mov r, 25
+  }
+
+  int offsetX[] = { OFFSET_PLAYER_X };
+  float playerX = getPointerValueF(ADDR_PLAYER, offsetX, 1);
+  int offsetY[] = { OFFSET_PLAYER_Y };
+  float playerY = getPointerValueF(ADDR_PLAYER, offsetY, 1);
+  int offsetZ[] = { OFFSET_PLAYER_Z };
+  float playerZ = getPointerValueF(ADDR_PLAYER, offsetZ, 1);
+
+  int offsetFace[] = { OFFSET_PLAYER_FACE };
+  int face = getPointerValue(ADDR_PLAYER, offsetFace, 1);
+  int faceFlag = (face == 0 ? -1 : 1);
+  distance = distance * faceFlag;
+  float startPointX = playerX + distance;
+  float startPointY = playerY - r;
+
+  int objArr[100];
+  int count = allobj(100, 0x11, objArr);
+  int index = 0;
+  for (int row = 0; row < 3; row++) {
+    for (int col = 0; col < 3; col++) {
+      if (index < count) {
+        int obj = objArr[index];
+        index++;
+
+        float x = startPointX + (col * r * faceFlag);
+        float y = startPointY + (row * r);
+
+        int posBase = obj + 0xAC;
+        int ox[] = { 0x10 };
+        setPointerValueF(posBase, ox, 1, x);
+        int oy[] = { 0x14 };
+        setPointerValueF(posBase, oy, 1, y);
+        int oz[] = { 0x18 };
+        setPointerValueF(posBase, oz, 1, playerZ);
+
+      }
+    }
+  }
+}
+
 void hookcode_allhpdmg () {
   int obj;
   __asm
@@ -120,6 +217,7 @@ void hookcode_allhpdmg () {
     if (zy == 0) {
       dmg = 1;
     } else {
+      hookcode_comeon();
       dmg = getAllHp();
     }
     __asm {
