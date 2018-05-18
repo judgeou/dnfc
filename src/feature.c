@@ -79,6 +79,13 @@ void SSS () {
   writePointerBuffer(ADDR_SSS, offsets, 1, 4, (char*)&value, pHandle);
 }
 
+void growDmg () {
+  HANDLE pHandle = feature.process.pHandle;
+  struct HookPoint * dmgPoint = getAllHpDmgPoint();
+  PUCHAR code = hookjmpBytes(hookcode_growDmg);
+  ADDRESS r = hook(pHandle, dmgPoint, code, sizeof(hookwapper));
+}
+
 ADDRESS featureInit () {
   struct ProcessInfo info = getProcessByName("DNF.exe");
   feature.process = info;

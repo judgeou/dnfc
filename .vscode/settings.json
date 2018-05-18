@@ -18,6 +18,9 @@
     "hotkey.h": "c",
     "vector": "cpp",
     "xstring": "cpp",
-    "xutility": "cpp"
+    "xutility": "cpp",
+    "system_error": "c",
+    "processthreadsapi.h": "c",
+    "xmemory0": "c"
   }
 }

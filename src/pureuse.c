@@ -149,7 +149,6 @@ void killit_kouxue (int objptr) {
 void killthemall () {
   int objArr[100];
   int count = allobj(100, 0x11, objArr);
-  printf("kill %d\n", count);
   for (int i = 0; i < count; i++) {
     killit_kouxue(objArr[i]);
   }
@@ -162,7 +161,7 @@ void hookcode_comeon () {
   int r;
   __asm {
     mov distance, 100
-    mov r, 25
+    mov r, 2
   }
 
   int offsetX[] = { OFFSET_PLAYER_X };
@@ -244,6 +243,46 @@ void hookcode_999dmg () {
       dmg = 1;
     } else {
       dmg = 100000000;
+    }
+    __asm {
+      cvtsi2ss xmm0, dmg
+    }
+  }
+}
+
+void hookcode_growDmg () {
+  int obj;
+  float originDmg;
+  __asm
+  {
+    mov eax, [ebp + 0xc]
+    mov obj, eax
+    movss originDmg, xmm0 
+  }
+  int zy = getValue(obj + 阵营偏移);
+  int type = getValue(obj + 类型偏移);
+  if ((type & 0x11) == 0x11) {
+    int dmg;
+    if (zy == 0) {
+      dmg = 1;
+    } else {
+      int vesp;
+      __asm {
+        mov vesp, esp
+      }
+      int * mul;
+      int * preObj;
+      mul = (int*)(vesp-0x30000);
+      preObj = (int*)(vesp-0x30004);
+
+      if (*mul == 0) {
+        *mul = 1;
+      }
+      dmg = originDmg * (*mul);
+      if (obj != *preObj) {
+        (*mul)+=5;
+        *preObj = obj;
+      }
     }
     __asm {
       cvtsi2ss xmm0, dmg

@@ -14,3 +14,4 @@ void comeon ();
  * 评分SSS
  */
 void SSS();
+void growDmg();

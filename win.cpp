@@ -17,6 +17,7 @@ void registerKeys (HWND hwnd) {
   RegisterHotKey(hwnd, 2, MOD_CONTROL | MOD_NOREPEAT, VK_F12);
   RegisterHotKey(hwnd, 3, MOD_ALT | MOD_NOREPEAT, VK_F11);
   RegisterHotKey(hwnd, 4, MOD_ALT | MOD_NOREPEAT, VK_F10);
+  RegisterHotKey(hwnd, 5, MOD_ALT | MOD_NOREPEAT, VK_F9);
 }
 
 void hotKeyProc (UINT vk, UINT fu) {
@@ -32,6 +33,9 @@ void hotKeyProc (UINT vk, UINT fu) {
   } else if (vk == VK_F12 & fu == MOD_CONTROL) {
     miaoshaRe();
     showMsgAsync(L"不秒杀了");
+  } else if (vk == VK_F9) {
+    growDmg();
+    showMsgAsync(L"倍数自增");
   }
 }
 
