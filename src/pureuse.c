@@ -60,7 +60,7 @@ char setPointerValueF (int base, int * offsets, int offsetsLen, float value) {
  * 遍历场上的单位
  * @param zhenying 要排除的阵营
  * @param typemask 类别掩码
- * @param cb 对每个单位调用的call
+ * @param arr 存放对象的数组指针
  */
 int allobj (int zhenying, int typemask, int * arr) {
   int renwu = getValue(ADDR_PLAYER);

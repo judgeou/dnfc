@@ -1,4 +1,4 @@
-#define 阵营偏移 0x82C
+#define 阵营偏移 0x834
 #define 类型偏移 0x98
 #define CALL_SETHP 0x01F16180
 
